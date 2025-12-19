@@ -1,0 +1,44 @@
+name,type,is_circular,size,flippable,default_path,flipped_path
+"22"" Tama Bassdrum SP",drum,0,25,0,Drums/22_tama_sp.png,Drums/22_tama_sp.png
+"22"" Tama Bassdrum DP",drum,0,25,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/22_tama_dp.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/22_tama_dp.png
+"22"" Istanbul Ride",cymbal,1,22,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/22_istanbul.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/22_istanbul_f.png
+"22"" Paiste Flat Ride",cymbal,1,22,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/22_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/22_paiste_f.png
+"21"" Zildjian Ride",cymbal,1,21,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/21_zildjian.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/21_zildjian_f.png
+"20"" Zultan Ride",cymbal,1,20,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_zultan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_zultan_f.png
+"20"" Masterwork Ride",cymbal,1,20,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_masterwork.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_masterwork_f.png
+"20"" Altes China",cymbal,1,20,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_alt.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/20_alt_f.png
+"19"" Sabian XSR Crash",cymbal,1,19,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/19_sabian_xsr.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/19_sabian_xsr_f.png
+"19"" Sabian Paragon China",cymbal,1,19,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/19_sabian_paragon.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/19_sabian_paragon_f.png
+"18"" Sabian HHX Crash",cymbal,1,18,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/18_sabian_hhx.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/18_sabian_hhx_f.png
+"18"" Sabian AAX Crash",cymbal,1,18,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/18_sabian_aax.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/18_sabian_aax_f.png
+"16"" Zultan Crash",cymbal,1,16,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_zultan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_zultan_f.png
+"16"" Paiste PSTX Crash",cymbal,1,16,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_paiste_pstx.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_paiste_pstx_f.png
+"16"" Millenium China",cymbal,1,16,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_millenium.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_millenium_f.png
+"16"" Paiste Crash",cymbal,1,16,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/16_paiste_f.png
+"16"" Tama Floortom",drum,1,16,1,/home/jt/Git/python-drum-kit-builder/resources/Drums/16_tama.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/16_tama.png
+"14"" Zultan HiHat",cymbal,1,14,0,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_zultan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_zultan.png
+"14"" Paiste HiHat",cymbal,1,14,0,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_paiste.png
+"14"" Millenium Crash",cymbal,1,14,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_millenium.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/14_millenium_f.png
+"13"" Zultan HiHat",cymbal,1,13,0,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/13_zultan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/13_zultan.png
+"13"" Tama Racktom",drum,1,13,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/13_tama.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/13_tama.png
+"13"" JJ Snare",drum,1,13,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/13_pearl.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/13_pearl.png
+"12"" Tama Racktom",drum,1,12,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/12_tama.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/12_tama.png
+"12"" Meinl Filter China",cymbal,1,12,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_meinl.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_meinl_f.png
+"12"" Wuhan China",cymbal,1,12,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_wuhan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_wuhan_f.png
+"12"" Paiste Splash",cymbal,1,12,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/12_paiste_f.png
+"10"" Wuhan China",cymbal,1,10,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/10_wuhan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/10_wuhan_f.png
+"10"" Paiste Splash",cymbal,1,10,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/10_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/10_paiste_f.png
+"10"" Gretsch Snare",drum,1,10,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/10_gretsch.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/10_gretsch.png
+"8"" Zultan Splash",cymbal,1,8,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_zultan.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_zultan_f.png
+"8"" Zultan Splash (Broken)",cymbal,1,8,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_zultan_broken.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_zultan_broken_f.png
+"8"" Paiste Bell",cymbal,1,8,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_paiste.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/8_paiste_f.png
+"8"" Meinl Ching Ring",other,1,8,1,/home/jt/Git/python-drum-kit-builder/resources/Other/8_meinl_ching.png,/home/jt/Git/python-drum-kit-builder/resources/Other/8_meinl_ching.png
+"6"" Stagg Splash (Thin)",cymbal,1,6,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_thin.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_thin_f.png
+"6"" Stagg Splash (Heavy)",cymbal,1,6,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_heavy.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_heavy_f.png
+"6"" Stagg Bell",cymbal,1,6,1,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_bell.png,/home/jt/Git/python-drum-kit-builder/resources/Cymbals/6_stagg_bell_f.png
+"6"" Octoban (High)",drum,1,6,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/6_octoban_low.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/6_octoban_low.png
+"6"" Octoban (Low)",drum,1,6,0,/home/jt/Git/python-drum-kit-builder/resources/Drums/6_octoban_low.png,/home/jt/Git/python-drum-kit-builder/resources/Drums/6_octoban_low.png
+Sonor Throne,other,1,12,0,/home/jt/Git/python-drum-kit-builder/resources/Other/throne.png,/home/jt/Git/python-drum-kit-builder/resources/Other/throne.png
+Pearl HiHat Machine,other,0,26,0,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_tilted.png,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_tilted.png
+Pearl Left Pedal,other,0,13,0,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_lp.png,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_lp.png
+Pearl Cowbell,other,0,9,0,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_cowbell.png,/home/jt/Git/python-drum-kit-builder/resources/Other/pearl_cowbell.png
