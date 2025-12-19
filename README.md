@@ -11,8 +11,9 @@ Several virtual drum kit building applications can be found on the internet. The
 
 ## Tools
 - Python
+- Python native packages
 - tkinter, customtkinter
-- PIL, os, csv, pathlib, math, ast
+- PIL
 - cx_Freeze
 
 ## How to Run
@@ -37,13 +38,16 @@ pip install -r requirements.txt
 Run the core script:
 python scripts/kit_builder_v1.py
 
+On Ubuntu you can alternatively simply run the test_install.sh file:
+bash test_install.sh
+
 [Optional] Create standalone version (install cx_Freeze first):
 python scripts/SCsetup.py
 
 ## Notes
 - If you want to be able to run the editor on a system without Python or all of the nescessary packages, you can create a standalone version with cx_Freeze (using SCsetup.py), or generate a standalone version with your prefered method.
 - Instructions on how to customize instruments will be provided in the future. Users with some knowledge of Python
-may be able to follow the comments in the script.
+may be able to follow helpful comments in the scripts.
 
 ## Future Improvements
 - Simplify parts of the code
