@@ -26,6 +26,7 @@ on_linux = False
 if platform == "linux" or platform == "linux2":
     on_linux = True # True if on linux
 
+# Set window size, adjust if needed
 window_size = [1200, 700]
 
 ctk.set_appearance_mode("system")
@@ -43,8 +44,8 @@ w = int(.5*window_size[0])
 h = int(.5*window_size[1])
 arr_step = 1 # move step when using arrow keys
 
-instruments = [] # index = instr. ID
-elements = dict() # dictionary of elements, key is layer
+instruments = [] # index is the instrument ID
+elements = {} # dictionary of elements, key is layer
 hovering = 0 # layer of element, above which mouse is hovering, 0 if None
 selected = 0 # selected layer, 0 if None
 all_selected = False # If all elements are selected via all_button
@@ -57,18 +58,19 @@ base_dir = os.getcwd() # base Directory
 base_dir = Path(base_dir)
 resources_dir = base_dir / "resources"
 gear_file = resources_dir / "gear.csv"
-kits_dir = base_dir / "Kits"
+kits_dir = base_dir / "kits"
 
-#root.iconbitmap(resources_dir / "Gui" / "8_zultan.ico")
+# Window icon, does generally not work with .ico on Ubuntu
+if not on_linux:
+    root.iconbitmap(resources_dir / "Gui" / "8_zultan.ico")
 
 save_path = None
 
+# Background images
 background_image = Image.open(resources_dir / "Environment" / "floor.jpg")
-#background_image = background_image.resize((background_image.width // 4, background_image.height // 4))
 background_image = ImageTk.PhotoImage(background_image)
 
 none_image = Image.open(resources_dir / "Environment" / "none.png")
-#background_image = background_image.resize((background_image.width // 4, background_image.height // 4))
 none_image = ImageTk.PhotoImage(none_image)
 
 
@@ -91,8 +93,8 @@ class Element():
     """ All Elements on canvas """
     spawn_point = [50, 50]
     
-    def __init__(self, ID, layer, pos=None, rot=0, flipped=False):
-        self.instr = instruments[ID]
+    def __init__(self, id, layer, pos=None, rot=0, flipped=False):
+        self.instr = instruments[id]
         self.layer = layer
         if pos is None:
             pos = Element.spawn_point.copy()
@@ -111,11 +113,21 @@ class Element():
                                             self.pos[1], anchor='center', image=self.texture)
         if self.instr.is_circular:
             if on_linux:
+                self.edge = my_canvas.create_oval(self.pos[0]-self.r, 
+                                                  self.pos[1]-self.r, 
+                                                  self.pos[0]+self.r, 
+                                                  self.pos[1]+self.r, fill='gray', stipple='@transparent.xbm', width=3, outline='')
+                
                 self.marker = my_canvas.create_oval(self.pos[0]-self.r, 
                                                     self.pos[1]-self.r, 
                                                     self.pos[0]+self.r, 
                                                     self.pos[1]+self.r, fill='gray', stipple='@transparent.xbm', width=3, outline='')
             else:
+                self.edge = my_canvas.create_oval(self.pos[0]-self.r, 
+                                                  self.pos[1]-self.r, 
+                                                  self.pos[0]+self.r, 
+                                                  self.pos[1]+self.r, fill='', width=3, outline='')
+                
                 self.marker = my_canvas.create_oval(self.pos[0]-self.r, 
                                                     self.pos[1]-self.r, 
                                                     self.pos[0]+self.r, 
@@ -130,10 +142,12 @@ class Element():
                                    +self.r, 
                                    -self.r] # center at (0, 0)
             if on_linux:
+                self.edge = my_canvas.create_polygon(self.polygon_points, fill='gray', stipple='@transparent.xbm', width=3, outline='')
                 self.marker = my_canvas.create_polygon(self.polygon_points, fill='gray', stipple='@transparent.xbm', width=3, outline='')
             else:
+                self.edge = my_canvas.create_polygon(self.polygon_points, fill='', width=3, outline='')
                 self.marker = my_canvas.create_polygon(self.polygon_points, fill='', width=3, outline='')
-                
+            my_canvas.move(self.edge, self.pos[0], self.pos[1])    
             my_canvas.move(self.marker, self.pos[0], self.pos[1])
         
         # select self
@@ -152,24 +166,24 @@ class Element():
 
     # Drag functions
     def drag_start(self, e):
-        """Begining drag of an element"""
+        """ Begining drag of an element """
         # record the item and its location
         self.drag_data_x = e.x
         self.drag_data_y = e.y
 
     def drag_stop(self, e):
-        """End drag of an element"""
+        """ End drag of an element """
         # reset the drag information
         self.drag_data_x = 0
         self.drag_data_y = 0
 
     def drag(self, e):
-        """Handle dragging of an element"""
+        """ Handle dragging of an element """
         # compute how much the mouse has moved
         delta_x = e.x - self.drag_data_x
         delta_y = e.y - self.drag_data_y
         
-        # move the object the appropriate amount
+        # move the object
         self.move(delta_x, delta_y)
         
         # record the new position
@@ -181,18 +195,13 @@ class Element():
         """ Move element on canvas """
         x_border = my_canvas.winfo_width()
         y_border = my_canvas.winfo_height()
-        destination_h = self.pos[0] + delta_x
-        destination_v = self.pos[1] + delta_y
-        if destination_h <= 0:
-            delta_x = -self.pos[0] # instead of 0, because arr_step could be > pos
-        if destination_h >= x_border:
-            delta_x = x_border - self.pos[0]
-        if destination_v <= 0:
-            delta_y = -self.pos[1]
-        if destination_v >= y_border:
-            delta_y = y_border - self.pos[1]
+        if self.pos[0] + delta_x <= 0 or self.pos[0] + delta_x >= x_border:
+            delta_x = 0
+        if self.pos[1] + delta_y <= 0 or self.pos[1] + delta_y >= y_border:
+            delta_y = 0
             
         my_canvas.move(self.marker, delta_x, delta_y)
+        my_canvas.move(self.edge, delta_x, delta_y)
         my_canvas.move(self.image, delta_x, delta_y)
         self.pos[0] += delta_x
         self.pos[1] += delta_y
@@ -208,10 +217,9 @@ class Element():
                 self.texture = instrument_image(self.instr.default_path, self.rot)
             my_canvas.itemconfig(self.image, image=self.texture)
     
-    # rotate
+    # Rotate
     def rotate(self, angle):
         """ Rotate image """
-        #if self.instr.flippable:
         if self.flipped:
             self.texture = instrument_image(self.instr.flipped_path, angle)
         else:
@@ -219,6 +227,7 @@ class Element():
                 
         my_canvas.itemconfig(self.image, image=self.texture)
         self.rot = angle
+        # Rotate marker shape if rectangular
         if not self.instr.is_circular:
             position = self.pos
             new_points = []
@@ -227,50 +236,51 @@ class Element():
                 rotated = rotate_point(x, y, angle)
                 new_points.append(rotated[0] + position[0])
                 new_points.append(rotated[1] + position[1])
+            my_canvas.coords(self.edge, new_points)
             my_canvas.coords(self.marker, new_points)
                 
-    # highlight
+    # Highlight
     def highlight(self, e):
-        """Highlighting an element when mouse is over"""
+        """ Highlighting an element when mouse is over """
         global hovering
         hovering = self.layer
-        my_canvas.itemconfig(self.marker, outline='red')
+        my_canvas.itemconfig(self.edge, outline='red')
     
-    # de-highlight
+    # De-highlight
     def dehighlight(self, e):
-        """Undoing highlighting of an element when mouse is not over"""
+        """ Undoing highlighting of an element when mouse is not over """
         if not all_selected: # prevent dehighlighting if all are selected
             global hovering
             hovering = 0
             if selected != self.layer:
-                my_canvas.itemconfig(self.marker, outline='')
+                my_canvas.itemconfig(self.edge, outline='')
     
-    # click
+    # Mouse click
     def click(self):
-        """Changing elements' state of being selected (T/F) when mouse is clicked on canvas"""
+        """ Changing elements' state of being selected (T/F) when mouse is clicked on canvas """
         global hovering
         global selected
         if hovering == self.layer:
             self.is_selected = True
             selected = self.layer
             rot_slider.set(-self.rot)
-            my_canvas.itemconfig(self.marker, outline='red')
+            my_canvas.itemconfig(self.edge, outline='red')
         else:
             self.is_selected = False
-            my_canvas.itemconfig(self.marker, outline='')
+            my_canvas.itemconfig(self.edge, outline='')
     
     # Clear images on canvas
     def clear(self):
         """ Remove element from canvas """
         my_canvas.delete(self.image)
+        my_canvas.delete(self.edge)
         my_canvas.delete(self.marker)
 
 
-""" Functions """
+""" Global functions """
 def instrument_image(path, angle):
     """ Create element image, rotated correctly """
     pil_img_resize = Image.open(path)
-    #pil_img_resize = pil_img.resize((pil_img.width // 10, pil_img.height // 10))
     pil_image_resize_rotated = pil_img_resize.rotate(angle, resample=Image.BICUBIC, expand=True)
     img = ImageTk.PhotoImage(pil_image_resize_rotated)
     return img
@@ -294,7 +304,7 @@ def global_click(e):
     for key in elements:
         elements[key].click()
     
-    # update selected
+    # Update selected
     selected = 0
     for key in elements:
         if elements[key].is_selected:
@@ -321,6 +331,7 @@ def deactivate_flip():
     flip_checkbutton.deselect()
         
 def update_listbox():
+    """ Update contents of used gear listbox """
     listbox.delete('0','end')
     for key in elements:
         listbox.insert(0, elements[key].instr.name)
@@ -330,6 +341,7 @@ def update_listbox():
         listbox.select_set(last - selected)
         
 def listbox_select(e):
+    """ Selecting an element in from the listbox """
     global all_selected
     all_selected = False
     
@@ -341,27 +353,29 @@ def listbox_select(e):
         global selected
         for key in elements:
             elements[key].is_selected = False
-            my_canvas.itemconfig(elements[key].marker, outline='')
+            my_canvas.itemconfig(elements[key].edge, outline='')
             if elements[key].instr.name == value:
                 selected = key    
                 elements[key].is_selected = True
                 rot_slider.set(-elements[key].rot)
-                my_canvas.itemconfig(elements[key].marker, outline='red')
+                my_canvas.itemconfig(elements[key].edge, outline='red')
                 activate_flip()
                 
-def sliderCallBack(angle):
+def slider_callback(angle):
+    """ Callback function if slider is used """
     global selected
     if selected > 0:
         elements[selected].rotate(-int(angle))
         
-def flip_change():
+def flip_callback():
+    """ Callback function if flip checkbox is used """
     elements[selected].flip()
         
 
 """ Canvas Functions """
 # Layer functions
-def upCallBack():
-    """Move selected element one layer up"""
+def up_callback():
+    """ Move selected element one layer up """
     global selected
     l = selected
     if l < len(elements) and l > 0:
@@ -371,8 +385,8 @@ def upCallBack():
         activate_flip()
         update_listbox()
         
-def downCallBack():
-    """Move selected element one layer down"""
+def down_callback():
+    """ Move selected element one layer down """
     global selected
     l = selected
     if l > 1:
@@ -383,8 +397,9 @@ def downCallBack():
         update_listbox()
 
 def swap_up(l):
-    my_canvas.tag_raise(elements[l].image, elements[l+1].marker)
-    my_canvas.tag_raise(elements[l].marker, elements[l].image)
+    """ Swap element with element one layer up """
+    my_canvas.tag_raise(elements[l].image, elements[l+1].edge)
+    my_canvas.tag_raise(elements[l].edge, elements[l].image)
     
     # Update instance layers 
     elements[l].layer = l+1
@@ -398,25 +413,23 @@ def swap_up(l):
     # Update markers
     raise_all_markers()
 
-def topCallBack():
-    """Move selected element to highest layer"""
+def top_callback():
+    """ Move selected element to highest layer """
     global selected
     l = selected
     highest_layer = len(elements)
-    for i in range(l, highest_layer):
-        upCallBack()
+    for _ in range(l, highest_layer):
+        up_callback()
 
-def bottomCallBack():
-    """Move selected element to lowest layer"""
+def bottom_callback():
+    """ Move selected element to lowest layer """
     global selected
-    for i in range(1, selected):
-        downCallBack()
+    for _ in range(1, selected):
+        down_callback()
 
     
-def addCallBack():
-    #global selected
-    #selected = 0
-    
+def add_callback():
+    """ Callback function for add button """
     selection = gear_tree.selection()
     selection_name = gear_tree.item(selection, option="text")
     if selection_name != "":
@@ -447,16 +460,14 @@ def addCallBack():
                 activate_flip()
                 break
     
-def removeCallBack():
-    """Remove the (if any) currently selected element"""
+def remove_callback():
+    """ Remove the (if any) currently selected element """
     global selected    
     if selected > 0:
         # Gear tree stuff
         instr_index = elements[selected].instr.ID
-        #instr_type = elements[selected].instr.type
         instruments[instr_index].is_used = False
         
-        #deleted_name = elements[selected].instr.name
         old_length = len(elements)
         elements[selected].clear()
         del elements[selected]
@@ -476,13 +487,9 @@ def removeCallBack():
         deactivate_flip()
         
         
-def update_tree():    
-    # Remove all childs
-    #for item in gear_tree.get_children(): # used self.tree instead
-    #    gear_tree.delete(item)
-        
+def update_tree():   
+    """ Update gear tree """
     # Delete each child item
-    
     child_items = gear_tree.get_children(drums_id)
     for child in child_items:
         gear_tree.delete(child)
@@ -493,7 +500,6 @@ def update_tree():
     for child in child_items:
         gear_tree.delete(child)
 
-        
     # Repopulate tree
     for inst in instruments:
         if inst.type == "drum" and not inst.is_used:
@@ -504,22 +510,21 @@ def update_tree():
             gear_tree.insert(other_id, tk.END, text=inst.name)
     
     
-
 def raise_all_markers():
-    """Move up all markers in order to ensure correct selectability"""
-    #for key in elements:
-    #    my_canvas.tag_raise(elements[key].marker)
+    """ Move up all markers in order to ensure correct selectability """
+    for key in elements:
+        my_canvas.tag_raise(elements[key].marker)
 
 """ Read, Write Data Functions"""
-# Function to save data to a CSV file
 def save_to_csv(filename):
+    """ Function to save data to a CSV file """
     with open(filename, mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=column_names)
         writer.writeheader()
 
 
-# Function to read data from a CSV file
 def read_from_csv(filename):
+    """ Function to read data from a CSV file """
     data = []
     with open(filename, mode='r') as file:
         reader = csv.DictReader(file)
@@ -527,20 +532,17 @@ def read_from_csv(filename):
             data.append(row)
     return data
 
-# Function to append a row to the CSV file
+
 def append_to_csv(filename, row):
+    """ Function to append a row to the CSV file """
     with open(filename, mode='a', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=column_names)
         writer.writerow(row)
+        
 
-# Function to delete a row from the CSV file based on index
-def delete_from_csv(filename, index):
-    data = read_from_csv(filename)
-    del data[index]
-    save_to_csv(filename, data)
 
-# Function to get a row from the CSV file
 def get_row_from_csv(filename, row_index):
+    """ Function to get a row from the CSV file """
     data = read_from_csv(filename)
     return data[row_index]
     
@@ -552,7 +554,6 @@ def save_as():
     file_path = filedialog.asksaveasfilename(defaultextension=".csv", filetypes=[("CSV files", "*.csv")], initialdir=kits_dir)
         
     if file_path:
-        #with open(file_path, 'w', newline='') as csvfile:
         save_to_csv(file_path)
         global save_path 
         save_path = file_path
@@ -620,6 +621,7 @@ def load():
             
         
 def reset():
+    """ Reset function """
     global elements
     for key in elements:
         elements[key].clear()
@@ -629,7 +631,7 @@ def reset():
     
     # Reset all parameters (selected, elements...)
     global hovering, selected, all_selected, save_path
-    elements = dict()
+    elements = {}
     hovering = 0
     selected = 0
     all_selected = False
@@ -649,13 +651,13 @@ def reset():
     root.title('Set Constructor')
     
     
-def bgCallBack(e):
+def bg_callback(e):
+    """ Callback function if background image is changed """
     value = bg_box.get()
     if value == 'wood floor 1':
         my_canvas.itemconfig(bg, image=background_image)
     if value == 'none':
         my_canvas.itemconfig(bg, image=none_image)
-
 
 
 
@@ -666,8 +668,9 @@ def get_real_canvas_size():
     return (my_canvas.winfo_width(), my_canvas.winfo_height())
 
 
-# Function to save canvas as image (without edges, buttons)
+
 def save_image(elements, output_path):
+    """ Function to save canvas as image (without edges, buttons) """
     # Create a new blank image using Pillow
     image = Image.new("RGBA", get_real_canvas_size(), (255, 255, 255, 0))  # Transparent background
 
@@ -687,7 +690,7 @@ def save_image(elements, output_path):
         pillow_image = Image.open(image_path)
         pillow_image_rot = pillow_image.rotate(elements[key].rot, resample=Image.BICUBIC, expand=True)            
         
-        # Adjust potition: on canvas, anchor is center. for the pillow image it is the top-left corner
+        # Adjust anchors: on canvas, anchor is center. for the pillow image it is the top-left corner
         image_width, image_height = pillow_image_rot.size
         x, y = int(coords[0]) - image_width // 2, int(coords[1]) - image_height // 2
 
@@ -766,7 +769,7 @@ my_canvas.pack(side="left", expand=True, fill="both")
 # Background
 bg = my_canvas.create_image(200, 0, anchor='center', image=background_image)
 
-# bind mouse left-click on canvas
+# Bind mouse left-click on canvas
 my_canvas.bind("<Button->", global_click)
 
 # Bind arrow keys
@@ -839,16 +842,16 @@ arrow_down = ImageTk.PhotoImage(arrow_down_pil)
 arrow_bottom_pil = Image.open(resources_dir / 'Gui' / 'arrow_bottom.png').resize((21, 21))
 arrow_bottom = ImageTk.PhotoImage(arrow_bottom_pil)
 
-top_button= tk.Button(root, image=arrow_top, borderwidth=0, highlightthickness=0, command=topCallBack)
+top_button= tk.Button(root, image=arrow_top, borderwidth=0, highlightthickness=0, command=top_callback)
 top_button.grid(column=3, row=1, sticky='w', padx=pad+5, pady=2)
 
-up_button = tk.Button(root, image=arrow_up, borderwidth=0, highlightthickness=0, command=upCallBack)
+up_button = tk.Button(root, image=arrow_up, borderwidth=0, highlightthickness=0, command=up_callback)
 up_button.grid(column=3, row=2, sticky='w', padx=pad+5, pady=2)
 
-down_button = tk.Button(root, image=arrow_down, borderwidth=0, highlightthickness=0, command=downCallBack)
+down_button = tk.Button(root, image=arrow_down, borderwidth=0, highlightthickness=0, command=down_callback)
 down_button.grid(column=3, row=3, sticky='w', padx=pad+5, pady=2)
 
-bottom_button = tk.Button(root, image=arrow_bottom, borderwidth=0, highlightthickness=0, command=bottomCallBack)
+bottom_button = tk.Button(root, image=arrow_bottom, borderwidth=0, highlightthickness=0, command=bottom_callback)
 bottom_button.grid(column=3, row=4, sticky='w', padx=pad+5, pady=2)
 
 # Pool Tree
@@ -871,11 +874,11 @@ cymbals_id = gear_tree.insert("", tk.END, text=" Cymbals", image=cymbals_icon)
 other_id = gear_tree.insert("", tk.END, text=" Other", image=other_icon)
 
 # Add Button
-add_button = tk.Button(root, text ="add", command=addCallBack)
+add_button = tk.Button(root, text ="add", command=add_callback)
 add_button.grid(column=0, row=6, sticky='nswe', padx=2*pad, pady=pad)
 
 # Remove Button
-remove_button = tk.Button(root, text="remove", command= removeCallBack)
+remove_button = tk.Button(root, text="remove", command= remove_callback)
 remove_button.grid(column=1, row=6, sticky='nswe', padx=2*pad, pady=pad)
 
 # Used Elements Listbox
@@ -912,11 +915,11 @@ bg_box['values'] = ('wood floor 1', 'none')
 bg_box.current(0)
 bg_box.grid(column = 5, row = 0, sticky='e', padx=pad)
 
-bg_box.bind('<<ComboboxSelected>>', bgCallBack)
+bg_box.bind('<<ComboboxSelected>>', bg_callback)
 
 
-# Gear Pop-up
 def gear_popup():
+    """ Gear Pop-up """
     # Make pop-up window
     top = tk.Toplevel(root)
     top.geometry("550x350")
@@ -946,8 +949,8 @@ def gear_popup():
     gear_frame.grid(column=0, row=0, sticky='nswe')
     
 
-# Exit Pop-up
 def gearlist_popup():
+    """ Gearlist Pop-up """
     # Make pop-up window
     top = tk.Toplevel(root)
     top.geometry("550x350")
@@ -977,8 +980,8 @@ def gearlist_popup():
     gear_frame.grid(column=0, row=0, sticky='nswe')
     
     
-# Exit Pop-up
 def exit_popup():
+    """ Exit Pop-up """
     # Make pop-up window
     top = tk.Toplevel(root)
     top.geometry("200x120")
@@ -996,12 +999,12 @@ def exit_popup():
     top.grid_rowconfigure(1, weight=2)
     
     tk.Label(top, text= "Are you sure you want to exit?").grid(column=0, row=0, columnspan=2, sticky='nswe', pady=10)
-    tk.Button(top, text="Yes", command=root.quit).grid(column=0, row=1, sticky='nswe', padx=10, pady=20)
+    tk.Button(top, text="Yes", command=root.destroy).grid(column=0, row=1, sticky='nswe', padx=10, pady=20)
     tk.Button(top, text="No", command=lambda: close_top(top)).grid(column=1, row=1, sticky='nswe', padx=10, pady=20)
     
 
-# New Pop-up
 def new_popup():
+    """ New Pop-up """
     # Make pop-up window
     top = tk.Toplevel(root)
     top.geometry("200x120")
@@ -1031,18 +1034,20 @@ def close_top_reset(top):
     top.destroy()
     
 def arr_step_dec():
+    """ Decrease arrow key movement step """
     global arr_step
     if arr_step > 3:
         arr_step -= 3
     
 def arr_step_inc():
+    """ Increase arrow key movement step """
     global arr_step
     if arr_step < 20:
         arr_step += 3
 
 
-# Select all button
-def allCallBack():
+def all_callback():
+    """ Callback function for select all button """
     global all_selected, selected
     if all_selected:
         all_selected = False
@@ -1056,15 +1061,15 @@ def allCallBack():
             elements[key].highlight([])
         all_selected = True
 
-all_button = tk.Button(root, text="Select all", command= allCallBack)
+all_button = tk.Button(root, text="Select all", command= all_callback)
 all_button.grid(column=0, row=8, sticky='nswe', padx=pad, pady=pad)
 
 # Rotation Slider
-rot_slider = tk.Scale(root, from_=-179, to=179, orient='horizontal', command=sliderCallBack)
+rot_slider = tk.Scale(root, from_=-179, to=179, orient='horizontal', command=slider_callback)
 rot_slider.grid(column=4, row=8, columnspan=2, sticky='nswe', padx=50)
 
 # Flip Checkbutton
-flip_checkbutton = tk.Checkbutton(root, text='Flip cymbal', command=flip_change, state='disabled')
+flip_checkbutton = tk.Checkbutton(root, text='Flip cymbal', command=flip_callback, state='disabled')
 flip_checkbutton.grid(column=3, row=8)
 
 # Menu bar
@@ -1157,7 +1162,7 @@ def write_gear_file():
             writer.writerow(new_element)
     
 
-# Uncomment to (re-)write the gear.csv file
+# (Re-)write the gear.csv file
 write_gear_file()
 
 # Delete a row from the CSV file
