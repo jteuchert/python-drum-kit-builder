@@ -9,6 +9,8 @@ Several virtual drum kit building applications can be found on the internet. The
 ## Project Structure
 - `resources/`: image files and gear.csv
 - `kits/`: saved example kits
+- `utils/`: utility modules
+- `models/`: instrument module
 - core script and additional files in root folder
 
 ## Tools
@@ -16,7 +18,6 @@ Several virtual drum kit building applications can be found on the internet. The
 - Python native packages
 - tkinter, customtkinter
 - PIL
-- cx_Freeze
 
 ## How to Run
 The scripts were tested on Linux (Ubuntu) and Win10/11.
@@ -36,9 +37,6 @@ Run the core script:
 
 On Ubuntu you can alternatively simply run the test_install.sh file (might take a minute to run):
 `bash test_install.sh`
-
-(Optional) Create standalone version (install cx_Freeze first):
-`python scripts/SCsetup.py`
 
 
 ### Tkinter on Ubuntu / Debian
@@ -62,7 +60,7 @@ With this editor you can design virtual drum kits using custom images of your ow
 - adjust key movement step size (under "Edit")
 
 ## Notes
-- If you want to be able to run the editor on a system without Python or all of the necessary packages, you can create a standalone version with cx_Freeze (using SCsetup.py), or generate a standalone version with your preferred method.
+- If you want to be able to run the editor on a system without Python or all of the necessary packages, you can create a standalone version with cx_Freeze, or generate a standalone version with your preferred method.
 - Instructions on how to customize instruments will be provided in the future. Users with some knowledge of Python
 may be able to follow helpful comments in the scripts.
 
@@ -71,3 +69,4 @@ may be able to follow helpful comments in the scripts.
 - Improve user friendliness (In-editor instrument management, flexible window size and shape, guided notebook for adding instruments)
 - Improve optics
 - Add features (instructions, sample sounds)
+- Create standalone
