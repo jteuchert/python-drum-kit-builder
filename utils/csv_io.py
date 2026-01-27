@@ -24,8 +24,16 @@ def append_to_csv(filename, row, column_names):
         writer.writerow(row)
         
 
-
 def get_row_from_csv(filename, row_index):
     """ Function to get a row from the CSV file """
     data = read_from_csv(filename)
     return data[row_index]
+
+
+def get_row_count_from_csv(self, path):
+    """ Get number of rows in CSV file """
+    num_rows = 0
+    with open(path, mode='r') as csvfile:
+        num_rows = sum(1 for _ in csvfile) - 1 # subtract 1 for header
+        print("Number of rows in CSV:", num_rows)
+    return num_rows

@@ -4,14 +4,16 @@ Software development of a virtual drum kit building tool in python.
 ![preview](Preview.png)
 
 ## Motivation
-Several virtual drum kit building applications can be found on the internet. They are fun to use, but mostly lack options for personalization. This project offers an alternative that can be used locally and allows the user to customize the gear available in the editor (for example with images of owned instruments). Designed kits can be saved, edited and exported as an image. The planning of gigs, sessions etc. with custom instruments is effortless and fun.
+Several virtual drum kit building applications can be found on the internet. They are fun to use, but mostly lack options for personalization. This project offers an alternative that can be used locally and allows the user to customize the gear available in the editor (for example with photos of owned instruments). Designed kits can be saved, edited and exported as an image. The planning of gigs, sessions etc. with custom instruments is effortless and fun.
 
 ## Project Structure
 - `resources/`: image files and gear.csv
-- `kits/`: saved example kits
+- `kits/`: saved example kits and images
 - `utils/`: utility modules
-- `models/`: instrument module
-- core script and additional files in root folder
+- `models/`: instrument and canvas element modules
+- core script **main.py** and additional files in root folder
+
+The code mostly follows a MVC (Model View Controller) structure to simplify future maintaining.
 
 ## Tools
 - Python
@@ -33,7 +35,7 @@ Then install Python dependencies:
 `pip install -r requirements.txt`
 
 Run the core script:
-`python scripts/kit_builder_v1.py`
+`python3 main.py`
 
 On Ubuntu you can alternatively simply run the test_install.sh file (might take a minute to run):
 `bash test_install.sh`
